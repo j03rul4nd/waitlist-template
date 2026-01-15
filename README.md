@@ -1,4 +1,6 @@
 # Modern Business Card — Next.js
+![Cover Waitlist](https://res.cloudinary.com/dumlcvjok/image/upload/v1768497139/coverwaitlist_p6vagl.png)
+
 
 A modern landing page built with **Next.js** that includes a waiting list / early access form.  
 Form submissions are handled via a **Next.js Route Handler** and emails are sent using **Resend**.
