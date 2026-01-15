@@ -1,36 +1,158 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Modern Business Card — Next.js
 
-## Getting Started
+A modern landing page built with **Next.js** that includes a waiting list / early access form.  
+Form submissions are handled via a **Next.js Route Handler** and emails are sent using **Resend**.
 
-First, run the development server:
+---
+
+## Requirements
+
+- Node.js 18+ (Node 20 recommended)
+- npm / yarn / pnpm
+- A Resend account with an active API key
+
+---
+
+## Environment Variables (Required)
+
+This project requires **two environment variables** to send emails from the `/api/waitlist` endpoint:
+
+- `RESEND_API_KEY` → Your Resend API key
+- `CONTACT_EMAIL` → Email address that will receive form submissions
+
+### Example (do NOT commit real keys)
+
+Create a `.env.local` file in the root of the project:
+
+```bash
+RESEND_API_KEY=REPLACE_WITH_YOUR_RESEND_KEY
+CONTACT_EMAIL=destination@email.com
+````
+
+> ✅ `.env.local` must NOT be committed to the repository.
+
+---
+
+## Install & Run Locally
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Create `.env.local` and add the required environment variables.
+
+3. Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+* [http://localhost:3000](http://localhost:3000)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Production Build (Local)
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run build
+npm run start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deploying to Vercel (Recommended)
 
-## Deploy on Vercel
+1. Push the repository to GitHub / GitLab / Bitbucket.
+2. Go to **Vercel → New Project** and import the repository.
+3. Open **Project Settings → Environment Variables** and add:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+* `RESEND_API_KEY` = your Resend API key
+* `CONTACT_EMAIL` = destination email address
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4. Deploy the project.
+
+> ⚠️ If you update environment variables, you must redeploy the project.
+
+---
+
+## Deploying to Other Platforms (Railway / Render / VPS)
+
+General steps:
+
+1. Configure environment variables in the platform or server:
+
+   * `RESEND_API_KEY`
+   * `CONTACT_EMAIL`
+
+2. Install dependencies and build the project:
+
+```bash
+npm install
+npm run build
+```
+
+3. Start the server:
+
+```bash
+npm run start
+```
+
+Make sure the platform exposes the correct port (Next.js uses port `3000` by default).
+
+---
+
+## Form Behavior
+
+* The form submits data via:
+
+  * `POST /api/waitlist`
+* The backend validates the request and sends an email using Resend to `CONTACT_EMAIL`.
+
+### Form Fields Sent
+
+The frontend sends the following fields:
+
+* `firstName`
+* `lastName`
+* `phone`
+* `email`
+
+These fields must match what the API route expects.
+
+---
+
+## Troubleshooting
+
+### Emails are not being received
+
+* Verify `RESEND_API_KEY` is valid.
+* Verify `CONTACT_EMAIL` is correct.
+* Resend may require a verified domain for the `from` address. Check your Resend dashboard.
+
+### 400 – Invalid data
+
+* Ensure the frontend is sending `firstName`, `lastName`, `phone`, and `email`.
+* Ensure the email address format is valid.
+
+### 500 – Internal server error
+
+* Usually caused by:
+
+  * Missing environment variables
+  * Invalid Resend configuration
+  * API key issues
+
+Check server logs for details.
+
+---
+
+## Security Notes
+
+* **Never** commit API keys to the repository.
+* Always configure secrets via environment variables in the deployment platform.
+
+---
