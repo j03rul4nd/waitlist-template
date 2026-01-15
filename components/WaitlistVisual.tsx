@@ -32,7 +32,7 @@ export default function WaitlistVisual() {
     const baseColorMap = textureLoader.load('https://res.cloudinary.com/dbxohjdng/image/upload/v1768469118/Base_Color_Albedo.png')
     baseColorMap.colorSpace = THREE.SRGBColorSpace
     
-    const normalMap = textureLoader.load('https://res.cloudinary.com/dbxohjdng/image/upload/v1768469748/normal.png')
+    const normalMap = textureLoader.load('https://res.cloudinary.com/dbxohjdng/image/upload/v1768476074/paper_normal_pbr_s89hjz.png')
 
     // Business card geometry (matching texture dimensions ratio: 2048 × 1345)
     const aspectRatio = 2048 / 1345

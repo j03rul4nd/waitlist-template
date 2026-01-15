@@ -1,126 +1,125 @@
-import type React from "react"
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { ArrowRight, Check } from "lucide-react"
+'use client';
+import { ArrowRight } from 'lucide-react';
+import { useWaitlistForm } from '@/hooks/useWaitlistForm';
 
-export default function WaitlistForm() {
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+export default function ModernWaitlistForm() {
+  const {
+    formData,
+    handleChange,
+    submit,
+    isLoading,
+    error,
+    isSuccess,
+  } = useWaitlistForm({ endpoint: '/api/waitlist' });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-
-    setIsLoading(false)
-    setIsSubmitted(true)
-  }
+  const handleSubmit = async () => {
+    try {
+      await submit();
+    } catch (err) {
+      console.error('Submission error:', err);
+    }
+  };
 
   return (
     <div className="max-w-xl">
-      {/* Badge */}
-      <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border/50 bg-muted/30 text-muted-foreground text-sm mb-8 backdrop-blur-sm">
-        <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-foreground/40 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-foreground/60"></span>
-        </span>
-        Early access now open
-      </div>
-
-      {/* Heading */}
-      <h1 className="text-5xl sm:text-6xl lg:text-7xl font-medium tracking-tight mb-6 text-balance leading-[1.1]">
-        Your digital identity, <span className="text-muted-foreground">reimagined</span>
-      </h1>
 
       {/* Description */}
-      <p className="text-lg sm:text-xl text-muted-foreground mb-10 leading-relaxed text-pretty max-w-lg">
-        A systematic approach to personal branding for founders and builders who think long-term. Early access is
-        limited.
-      </p>
+      <p className="text-sm sm:text-base text-gray-600 mb-6 leading-snug max-w-lg">
+        If you want to finally boost your personal brand, sign up today for the waiting list to receive the Kleinecke Effekt newsletter free of charge every day for two weeks.
+        </p>
+
 
       {/* Form */}
-      {!isSubmitted ? (
+      {!isSuccess ? (
         <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row gap-3">
-            <Input
-              type="text"
-              placeholder="Your name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              className="h-12 bg-background border-border/50 focus:border-foreground/20 transition-colors text-base"
-            />
-            <Input
-              type="email"
-              placeholder="Your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="h-12 bg-background border-border/50 focus:border-foreground/20 transition-colors text-base"
-            />
-          </div>
+          <input
+            type="text"
+            name="nombre"
+            placeholder="First name"
+            value={formData.nombre}
+            onChange={handleChange}
+            className="w-full px-6 py-4 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent transition-all text-gray-900 placeholder-gray-400"
+          />
 
-          <Button
+          <input
+            type="text"
+            name="apellido"
+            placeholder="Last name"
+            value={formData.apellido}
+            onChange={handleChange}
+            className="w-full px-6 py-4 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent transition-all text-gray-900 placeholder-gray-400"
+          />
+
+          <input
+            type="tel"
+            name="telefono"
+            placeholder="Phone number"
+            value={formData.telefono}
+            onChange={handleChange}
+            className="w-full px-6 py-4 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent transition-all text-gray-900 placeholder-gray-400"
+          />
+
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            className="w-full px-6 py-4 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent transition-all text-gray-900 placeholder-gray-400"
+          />
+
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+
+          <button
             onClick={handleSubmit}
-            size="lg"
             disabled={isLoading}
-            className="w-full sm:w-auto h-12 px-8 bg-foreground text-background hover:bg-foreground/90 transition-all duration-200 font-medium group"
+            className="w-full bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-[1.01] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
           >
             {isLoading ? (
-              "Requesting access..."
+              'Submitting...'
             ) : (
               <>
-                Request access
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                Get started
+                <ArrowRight className="w-5 h-5" />
               </>
             )}
-          </Button>
+          </button>
         </div>
       ) : (
-        <div className="flex items-start gap-4 p-6 rounded-2xl border border-border/50 bg-muted/30 backdrop-blur-sm">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-foreground text-background">
-            <Check className="h-5 w-5" />
-          </div>
-          <div>
-            <h3 className="font-medium text-lg mb-1">You're on the list!</h3>
-            <p className="text-muted-foreground text-sm leading-relaxed">
-              We'll notify you when early access is ready. Check your inbox for confirmation.
-            </p>
-          </div>
+        <div className="bg-green-50 border border-green-200 rounded-xl p-6">
+          <h3 className="text-xl font-semibold text-green-800 mb-2">
+            You're on the list!
+          </h3>
+          <p className="text-green-700">
+            We'll notify you when early access is ready. Check your inbox for confirmation.
+          </p>
         </div>
       )}
 
       {/* Trust indicators */}
-      <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4 text-sm text-muted-foreground">
-        <div className="flex items-center gap-2">
-          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
-          No spam, ever
+      <div className="mt-10 flex flex-col items-center">
+        <div className="flex items-center">
+          <img
+            src="https://images.unsplash.com/photo-1545167622-3a6ac756afa4?q=80&w=200&auto=format&fit=crop"
+            alt="User 1"
+            className="w-14 h-14 rounded-full object-cover grayscale"
+          />
+          <img
+            src="https://images.unsplash.com/photo-1594903833720-f9a68102aae1?q=80&w=200&auto=format&fit=crop"
+            alt="User 2"
+            className="w-16 h-16 rounded-full object-cover grayscale -ml-4"
+          />
+          <img
+            src="https://images.unsplash.com/photo-1735754920734-1447bd4117f3?q=80&w=200&auto=format&fit=crop"
+            alt="User 3"
+            className="w-14 h-14 rounded-full object-cover grayscale -ml-4"
+          />
         </div>
-        <div className="flex items-center gap-2">
-          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-            />
-          </svg>
-          Your data is secure
-        </div>
-        <div className="flex items-center gap-2">
-          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-          </svg>
-          Unsubscribe anytime
-        </div>
+
+        <p className="mt-3 text-gray-500 text-sm font-medium">
+          Already trust us
+        </p>
       </div>
     </div>
-  )
+  );
 }
